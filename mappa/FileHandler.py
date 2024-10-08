@@ -10,26 +10,46 @@ class FileHandler:
         self.rename_dict = self._build_rename_dict()
 
     def trigger_rename(self):
-        self._rename_dataframe()
+        try:
+            self._rename_dataframe()
+        except Exception as e:
+            click.echo(f"Error Occurred during rename: {e}")
+            exit()
 
     def trigger_remap(self, new_order):
-        self._remap_dataframe(new_order)
+        try:
+            self._remap_dataframe(new_order)
+        except Exception as e:
+            click.echo(f"Error Occurred during remap: {e}")
+            exit()
 
     def trigger_strip(self, columns):
-        self._drop_columns(columns)
-    
+        try:
+            self._drop_columns(columns)
+        except Exception as e:
+            click.echo(f"Error Occurred during strip: {e}")
+            exit()
+
     def trigger_lowercase(self):
-        self._lowercase_all_headers()
+        try:
+            self._lowercase_all_headers()
+        except Exception as e:
+            click.echo(f"Error Occurred during lowercase: {e}")
+            exit()
 
     def save_df_to_csv(self):
-        click.echo(f"Saving to {self.OutputPath}")
-        self.OutputDataframe.to_csv(self.OutputPath, index=False)
-        click.echo("Saved successfully")
+        try:
+            click.echo(f"Saving to {self.OutputPath}")
+            self.OutputDataframe.to_csv(self.OutputPath, index=False)
+            click.echo("Saved successfully")
+        except Exception as e:
+            click.echo(f"Error Occurred during file save: {e}")
+            exit()
 
     def _parse_datatable_to_df(self, file_path):
-        if file_path.endswith(".csv"):
+        if str(file_path).endswith(".csv"):
             dataframe = pd.read_csv(file_path, engine="pyarrow")
-        elif file_path.endswith(".xlsx"):
+        elif str(file_path).endswith(".xlsx"):
             dataframe = pd.read_excel(file_path, engine="openpyxl")
         return dataframe
     
